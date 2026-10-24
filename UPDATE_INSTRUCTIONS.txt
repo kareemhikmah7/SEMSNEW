@@ -1,0 +1,44 @@
+UNILAG ENERGY MONITOR — INTERACTIVE DASHBOARD UPDATE
+
+UPDATE YOUR EXISTING PROJECT
+1. Make a backup copy of your current project folder.
+2. Extract this ZIP into a separate folder. Open its SEMS folder.
+3. Copy app.py, the entire templates folder and the entire static folder into your existing project. Allow these code files to be replaced.
+4. KEEP your existing instance folder and readings.db file. Do not replace your saved database with the copy in this ZIP.
+5. In the terminal running Flask, press Ctrl+C. In your existing project folder, run:
+   python app.py
+6. Open http://127.0.0.1:5000 in your browser. Press Ctrl+F5 once to load the updated styling and JavaScript.
+   If the old page remains, close any other running Flask terminals before restarting.
+
+START A SEPARATE COPY
+Open the extracted SEMS folder in VS Code. In its terminal run:
+   python -m pip install -r requirements.txt
+   python app.py
+Then open http://127.0.0.1:5000.
+The included database is the unchanged copy from your uploaded project. It may be older than readings now stored on Render.
+
+UPDATE RENDER
+Update the same app.py, templates and static files in the Git repository connected to your existing Render service. Commit and push the changes, then redeploy that service. Keep your existing Render start command and database configuration. Do not upload a local database over your live database.
+
+WHAT CHANGED
+- Navy sidebar with Overview, Trends, Alerts and Reports.
+- Date-range and faculty filters; 7 days, 30 days or a custom range up to 366 days.
+- Interactive line graph with keyboard, hover and tap support.
+- Select a reported date to update the total, coverage, faculty bars and pie chart together.
+- Faculty pie chart with kWh and percentage details, plus a clickable legend.
+- Expandable exact-value tables for the line graph and faculty comparison.
+- Alerts use the selected range and faculty, compared with the previous seven submitted readings for that faculty. A reading must be more than 30% above a positive baseline to trigger an alert.
+- Reports, corrections and faculty reading entry are retained.
+- Responsive layout for phones and laptops. Charts work without internet/CDN libraries.
+
+HOW TO READ THE FIGURES
+The initial selected date is the latest submitted date within your chosen range. It may be earlier than today. If the range has no readings, choose a wider range.
+A partial total means some selected faculties have not submitted a reading for that date.
+The reported-day average divides the sum of daily submitted totals by the number of dates with at least one reading. This is not an estimate for missing faculties or dates.
+A saved zero is a real reported value. Missing submissions are not zeros.
+The pie chart shows the share of submitted consumption on the selected date. Missing readings have no slice; a zero reading has 0% share. When all readings are zero, no positive slices can be drawn.
+Raw consumption differences do not by themselves prove that a faculty is less energy efficient.
+Saved reading history lists all permitted dates; chart filters apply to charts and alerts.
+
+ACCOUNTS
+Existing individual faculty passwords and the VC password are unchanged by this dashboard update. See LOGIN_INSTRUCTIONS.txt from the previous password update.

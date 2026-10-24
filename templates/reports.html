@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Monthly report | UNILAG Energy Monitor</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+  >
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+
+<body class="shell-page">{% set page = 'reports' %}{% include '_sidebar.html' %}
+  <main class="workspace" id="main-content">
+
+    <header class="workspace-header">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">ϟ</span>
+        <span>UNILAG <strong>ENERGY</strong></span>
+      </div>
+
+      <a
+        class="report-link"
+        href="{{ url_for('dashboard') }}"
+      >
+        Back to dashboard
+      </a>
+    </header>
+
+    <section class="workspace-content">
+      <span class="badge">MONTHLY REPORT</span>
+
+      <h1>Energy consumption report</h1>
+
+      <p class="page-description">
+        {{ month_label }} · {{ account['name'] }}
+      </p>
+
+      <div class="report-actions">
+  <button
+    type="button"
+    id="download-report"
+    {% if record_count == 0 %}disabled{% endif %}
+  >
+    Download CSV
+  </button>
+
+  <button type="button" id="print-report">
+    Print / Save PDF
+  </button>
+</div>
+
+      {% with messages = get_flashed_messages(
+        with_categories=true
+      ) %}
+        {% for category, message in messages %}
+          <p class="notice notice-{{ category }}" role="status">
+            {{ message }}
+          </p>
+        {% endfor %}
+      {% endwith %}
+
+      <section class="content-panel report-controls">
+        <h2>Select a reporting month</h2>
+
+        <form
+          class="month-filter"
+          method="GET"
+          action="{{ url_for('monthly_report') }}"
+        >
+          <div class="field-group">
+            <label for="report-month">Month</label>
+
+            <input
+              id="report-month"
+              type="month"
+              name="month"
+              value="{{ selected_month }}"
+              required
+            >
+          </div>
+
+          <button type="submit">View report</button>
+        </form>
+      </section>
+
+      <div class="summary-grid">
+        <article class="summary-card">
+          <p>Total reported consumption</p>
+
+          <h2>
+            {% if record_count > 0 %}
+              {{ "%.2f"|format(monthly_total) }}
+              <span>kWh</span>
+            {% else %}
+              —
+            {% endif %}
+          </h2>
+
+          <small>{{ month_label }}</small>
+        </article>
+
+        <article class="summary-card">
+          <p>Submitted records</p>
+          <h2>{{ record_count }}</h2>
+          <small>One record per faculty per reporting day</small>
+        </article>
+
+        <article class="summary-card">
+          <p>Faculties included</p>
+          <h2>{{ summaries|length }}</h2>
+          <small>Based on your account access</small>
+        </article>
+      </div>
+
+      <section class="content-panel">
+        <h2>Faculty summary</h2>
+
+        <div class="table-wrapper">
+          <table class="readings-table" id="monthly-summary">
+            <thead>
+              <tr>
+                <th scope="col">Faculty</th>
+                <th scope="col">Total consumption</th>
+                <th scope="col">Days reported</th>
+                <th scope="col">Average per reported day</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for summary in summaries %}
+                <tr>
+                  <td>{{ summary['department'] }}</td>
+
+                  <td>
+                    {% if summary['days'] > 0 %}
+                      {{ "%.2f"|format(summary['total']) }} kWh
+                    {% else %}
+                      No readings
+                    {% endif %}
+                  </td>
+
+                  <td>{{ summary['days'] }}</td>
+
+                  <td>
+                    {% if summary['average'] is not none %}
+                      {{ "%.2f"|format(summary['average']) }} kWh
+                    {% else %}
+                      —
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if record_count == 0 %}
+          <p class="empty-state">
+            No readings are available for this month.
+          </p>
+        {% endif %}
+
+        <p class="chart-note">
+          Totals include reported days only. Missing readings
+          are not counted as zero consumption. Averages use
+          the number of reported days, not every calendar day.
+        </p>
+      </section>
+
+    </section>
+  </main>
+
+  <script>
+  const downloadButton = document.getElementById(
+    "download-report"
+  );
+
+  const printButton = document.getElementById(
+    "print-report"
+  );
+
+  downloadButton.addEventListener("click", () => {
+    const table = document.getElementById("monthly-summary");
+
+    // Read the headings and department summaries
+    // from the currently displayed report.
+    const rows = Array.from(table.rows);
+
+    const csvRows = rows.map((row) => {
+      const cells = Array.from(row.cells);
+
+      return cells.map((cell) => {
+        const text = cell.textContent
+          .replace(/\s+/g, " ")
+          .trim();
+
+        // Escape quotation marks and wrap each value.
+        return '"' + text.replace(/"/g, '""') + '"';
+      }).join(",");
+    });
+
+    const csvText = csvRows.join("\r\n");
+
+    // The prefix helps Excel recognise UTF-8 text.
+    const file = new Blob(
+      ["\uFEFF", csvText],
+      { type: "text/csv;charset=utf-8;" }
+    );
+
+    const fileUrl = URL.createObjectURL(file);
+    const link = document.createElement("a");
+
+    link.href = fileUrl;
+    link.download = "unilag-energy-{{ selected_month }}.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => {
+      URL.revokeObjectURL(fileUrl);
+    }, 1000);
+  });
+
+  printButton.addEventListener("click", () => {
+    window.print();
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+SEMS - Separate faculty passwords
+
+WHAT CHANGED
+Each faculty now has its own password hash and the login checks the selected account.
+The VC password is unchanged. No new environment variable is needed for faculty login.
+
+FACULTY PASSWORDS
+Use lowercase, spaces between words, and include "and" where listed.
+Do not include "Faculty of" in the password.
+
+Architecture: architecture
+Arts: arts
+Basic Clinical Sciences: basic clinical sciences
+Basic Medical Sciences: basic medical sciences
+Clinical Sciences: clinical sciences
+Communication and Media Studies: communication and media studies
+Computing and Informatics: computing and informatics
+Creative Arts: creative arts
+Dental Sciences: dental sciences
+Education: education
+Engineering: engineering
+Environmental Sciences: environmental sciences
+Health Professions: health professions
+Law: law
+Life Sciences: life sciences
+Management Sciences: management sciences
+Pharmacy: pharmacy
+Physical and Earth Sciences: physical and earth sciences
+Social Sciences: social sciences
+
+INSTALL ON YOUR LAPTOP
+1. Stop the running Flask application with Ctrl+C.
+2. Keep a backup of your current app.py.
+3. Replace ONLY app.py in the project you actually run with the app.py in this ZIP.
+4. Keep your existing instance/readings.db so your latest readings remain.
+5. In the terminal, open the folder containing the replaced app.py.
+6. Run: python app.py
+7. Open http://127.0.0.1:5000, log out if necessary, and refresh.
+8. Select Engineering and use engineering as the password.
+
+ONLINE VERSION
+Update the app.py in the source used by Render and redeploy.
+Editing your laptop copy alone does not change the Render website.
+
+TROUBLESHOOTING
+This corrected app.py contains no "Sign-in is not configured" message.
+If that message still appears, you are viewing a different running copy or an old deployment.
+
+The other supplied project files and database are preserved unchanged.
+These are separate faculty account passwords, not individual staff accounts.

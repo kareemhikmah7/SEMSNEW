@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sign in | UNILAG Energy Monitor</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+  >
+</head>
+
+<body>
+  <main class="login-layout">
+
+    <section class="brand-panel">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">ϟ</span>
+        <span>UNILAG <strong>ENERGY</strong></span>
+      </div>
+
+      <div class="brand-content">
+        <span class="eyebrow">CAMPUS ENERGY MONITORING</span>
+
+        <h1>Every reading.<br>One clear picture.</h1>
+
+        <p>
+          Submit faculty readings and monitor campus
+          energy consumption from one central workspace.
+        </p>
+
+        <div class="features">
+          <p><span>01</span> Faculty energy readings</p>
+          <p><span>02</span> Central campus dashboard</p>
+          <p><span>03</span> Consumption trends and reports</p>
+        </div>
+      </div>
+
+      <p class="brand-footer">
+        University of Lagos · Energy monitoring prototype
+      </p>
+    </section>
+
+    <section class="login-panel">
+      <div class="login-card">
+        <span class="badge">ENERGY MONITORING PORTAL</span>
+
+        <h2>Welcome back</h2>
+
+        <p class="subtitle">
+          Sign in to your faculty or administrator workspace.
+        </p>
+
+        <form method="POST" action="{{ url_for('login') }}">
+  <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}"
+  >
+          <label for="username">Account</label>
+
+          <select id="username" name="username" required>
+            <option value="">Choose your account</option>
+            <option value="vc">VC / Administrator</option>
+            {% for key, name in faculties.items() %}
+              <option value="{{ key }}">Faculty of {{ name }}</option>
+            {% endfor %}
+          </select>
+
+          <label for="password">Password</label>
+
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+
+         <button type="submit">Sign in</button>
+        {% if error %}
+  <p class="error-message" role="alert">
+    {{ error }}
+  </p>
+{% endif %}
+        </form>
+
+        <p class="login-note">
+          Select the account assigned to your faculty or office.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

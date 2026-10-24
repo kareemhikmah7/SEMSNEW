@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Correct reading | UNILAG Energy Monitor</title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+  >
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+
+<body class="shell-page">{% set page = 'edit' %}{% include '_sidebar.html' %}
+  <main class="workspace" id="main-content">
+    <header class="workspace-header">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">ϟ</span>
+        <span>UNILAG <strong>ENERGY</strong></span>
+      </div>
+
+      <a
+        class="report-link"
+        href="{{ url_for('dashboard') }}"
+      >
+        Back to dashboard
+      </a>
+    </header>
+
+    <section class="workspace-content">
+      <span class="badge">CORRECT A READING</span>
+
+      <h1>{{ account['name'] }}</h1>
+
+      <p class="page-description">
+        Consumption date: {{ reading['reading_date'] }}
+      </p>
+
+      <section class="content-panel">
+        <h2>Update energy consumption</h2>
+
+        <p class="panel-description">
+          Check the value before saving.
+          This replaces the consumption for the existing record.
+        </p>
+
+        {% if error %}
+          <p class="notice notice-error" role="alert">
+            {{ error }}
+          </p>
+        {% endif %}
+
+        <form method="POST" class="correction-form">
+          <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}"
+          >
+
+          <div class="field-group">
+            <label for="energy">
+              Correct consumption in kWh
+            </label>
+
+            <input
+              id="energy"
+              name="energy"
+              type="number"
+              min="0"
+              max="1000000"
+              step="0.01"
+              value="{{ energy_value }}"
+              required
+            >
+          </div>
+
+          <div class="correction-actions">
+            <button type="submit">Save correction</button>
+
+            <a
+              class="cancel-link"
+              href="{{ url_for('dashboard') }}"
+            >
+              Cancel
+            </a>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

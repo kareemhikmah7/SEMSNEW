@@ -1,0 +1,12 @@
+{% from '_icons.html' import icon %}
+<a class="skip-link" href="#main-content">Skip to content</a>
+<aside class="app-sidebar" aria-label="Main navigation">
+  <a class="sidebar-brand" href="{{ url_for('dashboard') }}"><span class="leaf-logo">{{ icon('leaf') }}</span><span><strong>UNILAG ENERGY</strong><small>Campus Energy Monitor</small></span></a>
+  <nav class="side-links" aria-label="Dashboard navigation">
+    <a href="{{ url_for('dashboard') }}#overview" data-section="overview" class="side-link {% if page == 'dashboard' %}active{% endif %}" {% if page == 'dashboard' %}aria-current="page"{% endif %}>{{ icon('overview') }}<span>Overview</span></a>
+    <a href="{{ url_for('dashboard') }}#trends" data-section="trends" class="side-link">{{ icon('trends') }}<span>Trends</span></a>
+    <a href="{{ url_for('dashboard') }}#alerts" data-section="alerts" class="side-link">{{ icon('alerts') }}<span>Alerts</span><span id="alert-count" class="nav-count" hidden></span></a>
+    <a href="{{ url_for('monthly_report') }}" class="side-link {% if page == 'reports' %}active{% endif %}" {% if page == 'reports' %}aria-current="page"{% endif %}>{{ icon('reports') }}<span>Reports</span></a>
+  </nav>
+  <div class="sidebar-bottom"><p>University of Lagos<br><span>Energy monitoring prototype</span></p><form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="side-logout" type="submit">{{ icon('logout') }} Log out</button></form></div>
+</aside>
